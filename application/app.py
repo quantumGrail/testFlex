@@ -13,5 +13,6 @@ Session(app)
 
 @app.route("/")
 def index():
+    """Application Homepage"""
 
-    return "test"
+    return render_template("index.html")
