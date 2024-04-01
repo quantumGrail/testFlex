@@ -1,6 +1,9 @@
 # Test Flex
 Test Flex provides users with test case management and automation tools. 
 
+# Commands
+- flask run: will start server when called inside application/
+
 # Dependencies
 - Flask: ^3.0.2
 - Flask-Session: ^0.8.0
