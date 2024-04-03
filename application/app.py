@@ -1,15 +1,11 @@
 # Import Management
+from cs50 import SQL
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure Application
 app = Flask(__name__)
-
-# Configure SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test-flex.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -17,7 +13,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure appication SQLite database
-db = SQLAlchemy(app)
+db = SQL("sqlite:///test-flex.db")
 
 # Define application routes
 @app.route("/")
@@ -54,3 +50,46 @@ def login():
     
     else:
         return render_template("login.html")
+    
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+    session.clear()
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        if not username:
+            return("Username cannot be blank.")
+
+        password = request.form.get("password")
+        if not password:
+            return("Password cannot be blank.")
+
+        confirmation = request.form.get("confirmation")
+        if not confirmation:
+            return("Please confirm password.")
+        elif confirmation != password:
+            return("Passwords do not match.")
+
+        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
+        if existing_user:
+            return("Username already exists.")
+
+        hashed_password = generate_password_hash(password)
+
+        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hashed_password)
+
+        return render_template("login.html")
+
+    return render_template("register.html")
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
