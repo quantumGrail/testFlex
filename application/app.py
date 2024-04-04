@@ -1,6 +1,6 @@
 # Import Management
 from cs50 import SQL
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -99,3 +99,15 @@ def tests():
     """View and build list of tests"""
 
     return render_template("tests.html")
+
+@app.route("/add_test", methods=["POST"])
+def add_test():
+    """Retrieve and insert test data into database"""
+    test_name = request.json.get('name')
+    test_description = request.json.get('description')
+    user_id = session.get('user_id')
+
+    db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
+               test_name, test_description, user_id)
+    
+    return jsonify({'message': 'Test added successfully'})

@@ -39,7 +39,24 @@
     <script>
         // Add New Test
         function addTest() {
+            const testName = prompt("Enter test name:");
+            const testDescription = prompt("Enter test description:");
 
+            fetch('/add_test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({name: testName, description: testDescription}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
 
         // Edit Existing Test
@@ -49,7 +66,7 @@
 
         // Delete Existing Test
         function deleteTest(testId) {
-            
+
         }
     </script>
 {% endblock %}
