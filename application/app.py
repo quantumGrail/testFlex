@@ -93,3 +93,9 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
+@app.route("/tests")
+def tests():
+    """View and build list of tests"""
+
+    return render_template("tests.html")

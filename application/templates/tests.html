@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ - Tests
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Tests</h1>
+
+        <!-- Add Test Button -->
+        <button class="btn btn-primary mb-3" onclick="addTest()">Add Test</button>
+
+        <!-- Tests List -->
+        <div id=""tests-list">
+            {% for test in tests %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">{{ test.name }}</h5>
+                    <button class="btn btn-sm btn-danger float-end" onclick="deleteTest('{{ test.id }}')">Delete</button>
+                    <button class=""btn btn-sm btn-secondary float-end me-2" onclick="editTest('{{ test.id }}')">Edit</button> 
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Description: {{ test.description }}</p>
+                    <p class="card-text">Created by: {{ test.created_by }}</p>
+                    <p class="card-text">Created at: {{ test.created_at }}</p>
+                    <!-- Test Steps List -->
+                    <ul class="list-group">
+                        {% for step in test.steps %}
+                        <li class="list-group-item">{{ step.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Add New Test
+        function addTest() {
+
+        }
+
+        // Edit Existing Test
+        function editTest(testId) {
+
+        }
+
+        // Delete Existing Test
+        function deleteTest(testId) {
+            
+        }
+    </script>
+{% endblock %}
