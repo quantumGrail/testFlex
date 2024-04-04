@@ -97,8 +97,13 @@ def logout():
 @app.route("/tests")
 def tests():
     """View and build list of tests"""
+    tests = db.execute("""
+        SELECT t.*, u.username AS created_by_username
+        FROM tests t
+        JOIN users u ON t.user_id = u.id
+    """)
 
-    return render_template("tests.html")
+    return render_template("tests.html", tests=tests)
 
 @app.route("/add_test", methods=["POST"])
 def add_test():
