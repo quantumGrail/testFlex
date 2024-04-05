@@ -112,6 +112,13 @@ def add_test():
     test_description = request.json.get('description')
     user_id = session.get('user_id')
 
+    # Server-side Validations
+    if not test_name:
+        return jsonify({'error': 'Test name is required'}), 400
+    
+    if not test_description:
+        return jsonify({'error': 'Test description is required'}), 400
+
     db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
                test_name, test_description, user_id)
     
