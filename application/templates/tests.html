@@ -11,8 +11,11 @@
         <!-- Add Test Button -->
         <button class="btn btn-primary mb-3" onclick="addTest()">Add Test</button>
 
+        <!-- Search Input Field -->
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search tests" onkeyup="searchTests()">
+
         <!-- Tests List -->
-        <div id=""tests-list">
+        <div id="tests-list">
             {% for test in tests %}
             <div class="card mb-3">
                 <div class="card-header">
@@ -57,6 +60,24 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        // Search Tests
+        function searchTests() {
+            console.log("Search function called");
+            var input, filter, cards, card, i, testName, testDescription;
+            input = document.getElementById("searchInput").value.toUpperCase();
+            cards = document.getElementById("tests-list").getElementsByClassName("card");
+            for (i = 0; i < cards.length; i++) {
+                card = cards[i];
+                testName = card.querySelector(".card-title").textContent.toUpperCase();
+                testDescription = card.querySelector(".card-text").textContent.toUpperCase();
+                if (testName.indexOf(input) > -1 || testDescription.indexOf(input) > -1) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            }
         }
 
         // Edit Existing Test
