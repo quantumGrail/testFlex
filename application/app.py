@@ -1,9 +1,7 @@
 # Import Management
 from cs50 import SQL
-from datetime import datetime
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure Application
@@ -13,10 +11,6 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-# Configure appication SQLite database with SQLAlchemy
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test-flex.db"
-db = SQLAlchemy(app)
 
 # CS50 SQL object for raw execution
 cs50_db = SQL("sqlite:///test-flex.db")
@@ -129,3 +123,26 @@ def add_test():
                test_name, test_description, user_id)
     
     return jsonify({'message': 'Test added successfully'})
+
+@app.route("/edit_test/<int:test_id>", methods=["GET", "POST"])
+def edit_test(test_id):
+    """Edit test detail and step"""
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+
+        cs50_db.execute(
+            "UPDATE tests SET name = ?, description = ? WHERE id = ?",
+            name, description, test_id
+        )
+
+        return redirect("/tests")
+    
+    else:
+        test = cs50_db.execute("SELECT * FROM tests WHERE id = ?", test_id)
+
+        if test is None:
+            return jsonify({'error': 'Test not found'}), 400
+    
+        return render_template("edit_test.html", test=test[0])
+   
