@@ -1,7 +1,9 @@
 # Import Management
 from cs50 import SQL
+from datetime import datetime
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure Application
@@ -12,8 +14,12 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure appication SQLite database
-db = SQL("sqlite:///test-flex.db")
+# Configure appication SQLite database with SQLAlchemy
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test-flex.db"
+db = SQLAlchemy(app)
+
+# CS50 SQL object for raw execution
+cs50_db = SQL("sqlite:///test-flex.db")
 
 # Define application routes
 @app.route("/")
@@ -35,7 +41,7 @@ def login():
         elif not request.form.get("password"):
             return("must provide password", 403)
         
-        rows = db.execute(
+        rows = cs50_db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
 
@@ -72,13 +78,13 @@ def register():
         elif confirmation != password:
             return("Passwords do not match.")
 
-        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
+        existing_user = cs50_db.execute("SELECT * FROM users WHERE username = ?", username)
         if existing_user:
             return("Username already exists.")
 
         hashed_password = generate_password_hash(password)
 
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hashed_password)
+        cs50_db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hashed_password)
 
         return render_template("login.html")
 
@@ -97,7 +103,7 @@ def logout():
 @app.route("/tests")
 def tests():
     """View and build list of tests"""
-    tests = db.execute("""
+    tests = cs50_db.execute("""
         SELECT t.*, u.username AS created_by_username
         FROM tests t
         JOIN users u ON t.user_id = u.id
@@ -119,7 +125,7 @@ def add_test():
     if not test_description:
         return jsonify({'error': 'Test description is required'}), 400
 
-    db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
+    cs50_db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
                test_name, test_description, user_id)
     
     return jsonify({'message': 'Test added successfully'})
