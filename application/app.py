@@ -139,10 +139,19 @@ def edit_test(test_id):
         return redirect("/tests")
     
     else:
-        test = cs50_db.execute("SELECT * FROM tests WHERE id = ?", test_id)
+        test = cs50_db.execute(
+            "SELECT * FROM tests WHERE id = ?", test_id
+        )
 
         if test is None:
             return jsonify({'error': 'Test not found'}), 400
     
         return render_template("edit_test.html", test=test[0])
    
+@app.route("/delete_test/<int:test_id>", methods=["POST"])
+def delete_test(test_id):
+    """Delete Test"""
+    cs50_db.execute(
+        "DELETE FROM tests WHERE id = ?", test_id
+    )
+    return redirect("/tests")

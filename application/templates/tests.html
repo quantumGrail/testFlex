@@ -87,7 +87,19 @@
 
         // Delete Existing Test
         function deleteTest(testId) {
-
+            fetch(`/delete_test/${testId}`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to delete test');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            });
         }
     </script>
 {% endblock %}
