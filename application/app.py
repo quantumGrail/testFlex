@@ -155,3 +155,15 @@ def delete_test(test_id):
         "DELETE FROM tests WHERE id = ?", test_id
     )
     return redirect("/tests")
+
+@app.route("/automation", methods=["GET", "POST"])
+def automation():
+    """View and configure automation settings"""
+
+    return render_template("automation.html")
+
+@app.route("/results", methods=["GET", "POST"])
+def results():
+    """View and report on test runs"""
+
+    return render_template("results.html")
