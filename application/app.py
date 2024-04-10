@@ -105,24 +105,29 @@ def tests():
 
     return render_template("tests.html", tests=tests)
 
-@app.route("/add_test", methods=["POST"])
+@app.route("/add_test", methods=["POST", "GET"])
 def add_test():
     """Retrieve and insert test data into database"""
-    test_name = request.json.get('name')
-    test_description = request.json.get('description')
-    user_id = session.get('user_id')
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        user_id = session.get('user_id')
 
-    # Server-side Validations
-    if not test_name:
-        return jsonify({'error': 'Test name is required'}), 400
+        # Server-side Validations
+        if not name:
+            return jsonify({'error': 'Test name is required'}), 400
     
-    if not test_description:
-        return jsonify({'error': 'Test description is required'}), 400
+        if not description:
+            return jsonify({'error': 'Test description is required'}), 400
 
-    cs50_db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
-               test_name, test_description, user_id)
+        cs50_db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
+               name, description, user_id)
     
-    return jsonify({'message': 'Test added successfully'})
+        return redirect("/tests")
+    
+    else:
+        return render_template("add_test.html")
+
 
 @app.route("/edit_test/<int:test_id>", methods=["GET", "POST"])
 def edit_test(test_id):
