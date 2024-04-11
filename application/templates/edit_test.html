@@ -6,25 +6,34 @@
 
 {% block content %}
     <div class="container">
-        <h1>Edit Test</h1>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="name" class="form-label">Test Name</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ test.name }}">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Edit Test</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Test Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ test.name }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3">{{ test.description }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                        <div id="test-step-form" style="display: none;">
+                            <form>
+                                <h2 class="mt-4">Test Steps</h2>
+                                <!-- Test step form fields will go here-->
+                                <button type="submit" class="btn btn-primary">Submit Step</button>
+                            </form>
+                        </div>
+                        <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3">{{ test.description }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-        <div id="test-step-form" style="display: none;">
-            <form>
-                <h2>Test Steps</h2>
-                <button type="submit" class="btn btn-primary">Submit Step</button>
-            </form>
         </div>
-        <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
     </div>
 
     <script>
