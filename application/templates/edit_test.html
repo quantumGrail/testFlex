@@ -26,9 +26,22 @@
                             </div>
                         </form>
                         <div id="test-step-form" style="display: none;">
-                            <form>
+                            <form method="POST" action="/add_step">
                                 <h2 class="mt-4">Test Steps</h2>
-                                <!-- Test step form fields will go here-->
+                                <div class="mb-3">
+                                    <label for="action" class="form-label">Action</label>
+                                    <input type="text" class="form-control" id="action" name="action">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="result" class="form-label">Result</label>
+                                    <input type="text" class="form-control" id="result" name="result">
+                                </div>
+                                <!-- Hidden input field to hold the test_id -->
+                                <input type="hidden" id="test_id" name="test_id" value="{{ test.id }}">
                                 <button type="submit" class="btn btn-primary">Submit Step</button>
                             </form>
                         </div>
