@@ -20,7 +20,10 @@
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3">{{ test.description }}</textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
+                            </div>
                         </form>
                         <div id="test-step-form" style="display: none;">
                             <form>
@@ -29,7 +32,6 @@
                                 <button type="submit" class="btn btn-primary">Submit Step</button>
                             </form>
                         </div>
-                        <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
                     </div>
                 </div>
             </div>
@@ -37,7 +39,8 @@
     </div>
 
     <script>
-        document.getElementById('add-step-btn').addEventListener('click', function() {
+        document.getElementById('add-step-btn').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
             document.getElementById('test-step-form').style.display = 'block';
         });
     </script>
