@@ -103,6 +103,11 @@ def tests():
         JOIN users u ON t.user_id = u.id
     """)
 
+    for test in tests:
+        test['steps'] = cs50_db.execute("""
+            SELECT * FROM test_steps WHERE test_id = ?
+            """, test['id'])
+
     return render_template("tests.html", tests=tests)
 
 @app.route("/add_test", methods=["POST", "GET"])
@@ -150,6 +155,13 @@ def edit_test(test_id):
 
         if test is None:
             return jsonify({'error': 'Test not found'}), 400
+        
+        test_steps = cs50_db.execute(
+            "SELECT * FROM test_steps WHERE test_id = ?", test_id
+        )
+
+        if test_steps is None:
+            return jsonify({'error:' 'No steps found for test'}), 300
     
         return render_template("edit_test.html", test=test[0])
    

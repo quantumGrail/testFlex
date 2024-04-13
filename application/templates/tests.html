@@ -30,8 +30,15 @@
                     <!-- Test Steps List -->
                     <ul class="list-group">
                         {% for step in test.steps %}
-                        <li class="list-group-item">{{ step.name }}</li>
+                        <li class="list-group-item">
+                            <strong>Action:</strong> {{ step.action }}<br>
+                            <strong>Location:</strong> {{ step.location }}<br>
+                            <strong>Result:</strong> {{ step.result }}
+                        </li>
                         {% endfor %}
+                        {% if not test.steps %}
+                        <li class="list-group-item">No steps found for this test.</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
