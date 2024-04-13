@@ -5,7 +5,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure Application
-app = Flask(__name__)
+app = Flask(__name__, static_folder='templates/static')
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -161,7 +161,7 @@ def edit_test(test_id):
         )
 
         if test_steps is None:
-            return jsonify({'error:' 'No steps found for test'}), 300
+            return jsonify({'error:' 'No steps found for test'}), 200
     
         return render_template("edit_test.html", test=test[0])
    
