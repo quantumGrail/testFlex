@@ -172,3 +172,25 @@ def results():
     """View and report on test runs"""
 
     return render_template("results.html")
+
+@app.route("/add_step", methods=["POST"])
+def add_step():
+    """Add a step to a test"""
+
+    action = request.form.get("action")
+    location = request.form.get("location")
+    result = request.form.get("result")
+    test_id = request.form.get("test_id")
+
+    # Server-side Validations
+    if not action:
+        return jsonify({'error': 'Test action is required'}), 400
+    
+    if not test_id:
+        return jsonify({'error': 'Faileed to find related test'}), 400
+
+    cs50_db.execute(
+        "INSERT INTO test_steps (action, location, result, test_id) VALUES (?, ?, ?, ?)",
+        action, location, result, test_id)
+    
+    return("Test step added")
