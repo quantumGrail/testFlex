@@ -140,10 +140,18 @@ def edit_test(test_id):
     if request.method == "POST":
         name = request.form.get("name")
         description = request.form.get("description")
-
         cs50_db.execute(
             "UPDATE tests SET name = ?, description = ? WHERE id = ?",
             name, description, test_id
+        )
+
+        # Add new test step
+        action = request.form.get("action")
+        location = request.form.get("location")
+        result = request.form.get("result")
+        cs50_db.execute(
+            "INSERT INTO test_steps (test_id, action, location, result) VALUES (?, ?, ?, ?)",
+            (test_id, action, location, result)
         )
 
         return redirect("/tests")
@@ -153,17 +161,14 @@ def edit_test(test_id):
             "SELECT * FROM tests WHERE id = ?", test_id
         )
 
-        if test is None:
+        if not test:
             return jsonify({'error': 'Test not found'}), 400
         
         test_steps = cs50_db.execute(
             "SELECT * FROM test_steps WHERE test_id = ?", test_id
         )
-
-        if test_steps is None:
-            return jsonify({'error:' 'No steps found for test'}), 200
     
-        return render_template("edit_test.html", test=test[0])
+        return render_template("edit_test.html", test=test[0], test_steps=test_steps)
    
 @app.route("/delete_test/<int:test_id>", methods=["POST"])
 def delete_test(test_id):

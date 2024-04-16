@@ -24,10 +24,27 @@
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                                 <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
                             </div>
+                            <!-- Existing Test Steps -->
+                            <h2 class="mt-4">Test Steps</h2>
+                            {% for step in test_steps %}
+                                <div class="mb-3">
+                                    <label for="action" class="form-label">Action</label>
+                                    <input type="text" class="form-control" id="action" name="action" value="{{ step.action }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" value="{{ step.location }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="result" class="form-label">Result</label>
+                                    <input type="text" class="form-control" id="result" name="result" value="{{ step.result }}">
+                                </div>
+                                <hr>
+                            {% endfor %}
                         </form>
                         <div id="test-step-form" style="display: none;">
                             <form method="POST" action="/add_step">
-                                <h2 class="mt-4">Test Steps</h2>
+                                <h2 class="mt-4">Add Test Step</h2>
                                 <div class="mb-3">
                                     <label for="action" class="form-label">Action</label>
                                     <input type="text" class="form-control" id="action" name="action">
@@ -42,7 +59,7 @@
                                 </div>
                                 <!-- Hidden input field to hold the test_id -->
                                 <input type="hidden" id="test_id" name="test_id" value="{{ test.id }}">
-                                <button type="submit" class="btn btn-primary">Submit Step</button>
+                                <button type="submit" class="btn btn-primary">Add Step</button>
                             </form>
                         </div>
                     </div>
