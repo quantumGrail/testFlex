@@ -210,4 +210,4 @@ def add_step():
         "INSERT INTO test_steps (action, location, result, test_id) VALUES (?, ?, ?, ?)",
         action, location, result, test_id)
     
-    return("Test step added")
+    return redirect(f"/edit_test/{test_id}")
