@@ -145,16 +145,17 @@ def edit_test(test_id):
             name, description, test_id
         )
 
-        # Add new test step
-        action = request.form.get("action")
-        location = request.form.get("location")
-        result = request.form.get("result")
-        cs50_db.execute(
-            "INSERT INTO test_steps (test_id, action, location, result) VALUES (?, ?, ?, ?)",
-            (test_id, action, location, result)
-        )
+        # Add new test step, if data is present 
+        if request.form.get("action") and request.form.get("location") and request.form.get("result"):
+            action = request.form.get("action")
+            location = request.form.get("location")
+            result = request.form.get("result")
+            cs50_db.execute(
+                "INSERT INTO test_steps (test_id, action, location, result) VALUES (?, ?, ?, ?)",
+                (test_id, action, location, result)
+            )
 
-        return redirect("/tests")
+            return redirect("/tests")
     
     else:
         test = cs50_db.execute(
@@ -211,3 +212,17 @@ def add_step():
         action, location, result, test_id)
     
     return redirect(f"/edit_test/{test_id}")
+
+@app.route("/edit_step/<int:step_id>", methods=["POST"])
+def edit_step(step_id):
+    """Edit a test step"""
+    if request.method == "POST":
+        action = request.form.get("action")
+        location = request.form.get("location")
+        result = request.form.get("result")
+    
+        cs50_db.execute(
+            "UPDATE test_steps SET action = ?, location = ?, result = ? WHERE id = ?",
+            action, location, result, step_id
+        )
+        return redirect("/tests")
