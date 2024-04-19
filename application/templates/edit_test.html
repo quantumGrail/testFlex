@@ -5,76 +5,90 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Edit Test</div>
-                    <div class="card-body">
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Test Name</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ test.name }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3">{{ test.description }}</textarea>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
-                            </div>
-                            <!-- Existing Test Steps -->
-                            <h2 class="mt-4">Test Steps</h2>
-                            {% for step in test_steps %}
-                                <form method="POST" action="/edit_step/{{ step['id'] }}">
-                                    <div class="mb-3">
-                                        <label for="action" class="form-label">Action</label>
-                                        <input type="text" class="form-control" id="action" name="action" value="{{ step.action }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="location" class="form-label">Location</label>
-                                        <input type="text" class="form-control" id="location" name="location" value="{{ step.location }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="result" class="form-label">Result</label>
-                                        <input type="text" class="form-control" id="result" name="result" value="{{ step.result }}">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save Step</button>
-                                </form>
-                                <hr>
-                            {% endfor %}
-                        </form>
-                        <div id="test-step-form" style="display: none;">
-                            <form method="POST" action="/add_step">
-                                <h2 class="mt-4">Add Test Step</h2>
-                                <div class="mb-3">
-                                    <label for="action" class="form-label">Action</label>
-                                    <input type="text" class="form-control" id="action" name="action">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="location" class="form-label">Location</label>
-                                    <input type="text" class="form-control" id="location" name="location">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="result" class="form-label">Result</label>
-                                    <input type="text" class="form-control" id="result" name="result">
-                                </div>
-                                <!-- Hidden input field to hold the test_id -->
-                                <input type="hidden" id="test_id" name="test_id" value="{{ test.id }}">
-                                <button type="submit" class="btn btn-primary">Add Step</button>
-                            </form>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Edit Test</div>
+                <div class="card-body">
+                    <form method="POST" action="/edit_test/{{ test['id'] }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Test Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ test.name }}">
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ test.description }}</textarea>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button id="add-step-btn" class="btn btn-secondary">Add Step</button>
+                        </div>
+                    </form>
+                    <!-- Existing Test Steps -->
+                    <h2 class="mt-4">Test Steps</h2>
+                    {% for step in test_steps %}
+                        <form method="POST" action="/edit_step/{{ step['id'] }}">
+                            <div class="mb-3">
+                                <label for="action" class="form-label">Action</label>
+                                <input type="text" class="form-control" id="action" name="action" value="{{ step.action }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ step.location }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="result" class="form-label">Result</label>
+                                <input type="text" class="form-control" id="result" name="result" value="{{ step.result }}">
+                            </div>
+                            <!-- Hidden input field to hold the test_id -->
+                            <input type="hidden" id="test_id" name="test_id" value="{{ test.id }}">
+                            <button type="submit" class="btn btn-primary">Save Step</button>
+                        </form>
+                        <hr>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.getElementById('add-step-btn').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-            document.getElementById('test-step-form').style.display = 'block';
-        });
-    </script>
+
+<div id="test-step-form" style="display: none;" class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Add Test Step</div>
+                <div class="card-body">
+                    <form method="POST" action="/add_step">
+                        <h2 class="mt-4">Add Test Step</h2>
+                        <div class="mb-3">
+                            <label for="action" class="form-label">Action</label>
+                            <input type="text" class="form-control" id="action" name="action">
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location">
+                        </div>
+                        <div class="mb-3">
+                            <label for="result" class="form-label">Result</label>
+                            <input type="text" class="form-control" id="result" name="result">
+                        </div>
+                        <!-- Hidden input field to hold the test_id -->
+                        <input type="hidden" id="test_id" name="test_id" value="{{ test.id }}">
+                        <button type="submit" class="btn btn-primary">Add Step</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('add-step-btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById('test-step-form').style.display = 'block';
+    });
+</script>
+
 {% endblock %}

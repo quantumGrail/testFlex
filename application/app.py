@@ -145,17 +145,7 @@ def edit_test(test_id):
             name, description, test_id
         )
 
-        # Add new test step, if data is present 
-        if request.form.get("action") and request.form.get("location") and request.form.get("result"):
-            action = request.form.get("action")
-            location = request.form.get("location")
-            result = request.form.get("result")
-            cs50_db.execute(
-                "INSERT INTO test_steps (test_id, action, location, result) VALUES (?, ?, ?, ?)",
-                (test_id, action, location, result)
-            )
-
-            return redirect("/tests")
+        return redirect("/tests")
     
     else:
         test = cs50_db.execute(
