@@ -2,6 +2,8 @@
 from cs50 import SQL
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure Application
@@ -14,6 +16,15 @@ Session(app)
 
 # CS50 SQL object for raw execution
 cs50_db = SQL("sqlite:///test-flex.db")
+
+# Initialize Selenium for Chrome
+def initialize_selenium():
+    try:
+        driver = webdriver.Chrome(ChromeDriverManager().install())
+        return driver
+    except Exception as e:
+        print("Error initializing webdriver:", e)
+        return None
 
 # Define application routes
 @app.route("/")
