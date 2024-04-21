@@ -210,9 +210,10 @@ def edit_step(step_id):
         action = request.form.get("action")
         location = request.form.get("location")
         result = request.form.get("result")
+        test_id = request.form.get("test_id")
     
         cs50_db.execute(
             "UPDATE test_steps SET action = ?, location = ?, result = ? WHERE id = ?",
             action, location, result, step_id
         )
-        return redirect("/tests")
+        return redirect(f"/edit_test/{test_id}")
