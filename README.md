@@ -1,5 +1,14 @@
 # Test Flex
 Test Flex provides users with test case management and automation tools. 
+Groups of users may work together to create manual and automated tests.
+Tests may be left manual until user is ready to build a connected automation. 
+Users may create and reuse named xpaths for common site locators. 
+Expectations may be set for repeatable, predictable outcomes.
+
+A provided syntax is in development for 'actions' such as:
+- Click
+- Type
+- Route
 
 # Commands
 The following commands should only be run inside the application/ directory:

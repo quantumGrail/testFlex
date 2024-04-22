@@ -8,4 +8,21 @@
 <div class="container">
     <h1>Automation</h1>
 </div>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Create New Automation</div>
+                <div class="card-body">
+                    <form method="POST" action="/new_automation">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Automation Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name your automation">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
