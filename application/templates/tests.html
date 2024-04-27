@@ -5,62 +5,64 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1>Tests</h1>
-        
-    </div>
-
-    <div id="tests-list" class="container">
-        <div class="row justify-content-center mt-5">
+    <div id="test-control-bar" class="container mb-3">
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Existing Tests</div>
-                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-primary me-2" onclick="addTest()">Add Test</button>
-                                </div>
-                                <input type="text" id="searchInput" class="form-control" placeholder="Search tests" onkeyup="searchTests()">
+                    <h5 class="card-header">Test Management</h5>
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-primary me-2" onclick="addTest()">Add Test</button>
                             </div>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search tests" onkeyup="searchTests()">
                         </div>
-
-                        {% for test in tests %}
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <h5 class="card-title">{{ test.name }}</h5>
-                                    <button class="btn btn-sm btn-danger float-end" onclick="deleteTest('{{ test.id }}')">Delete</button>
-                                    <button class="btn btn-sm btn-secondary float-end me-2" onclick="editTest('{{ test.id }}')">Edit</button> 
-                                </div>
-
-                                <div class="card-body">
-                                    <p class="card-text">Description: {{ test.description }}</p>
-                                    <p class="card-text">Created by: {{ test.created_by_username }}</p>
-                                    <p class="card-text">Created at: {{ test.created_at }}</p>
-                        
-                                    <!-- Test Steps List -->
-                                    <ul class="list-group">
-
-                                        {% for step in test.steps %}
-                                            <li class="list-group-item">
-                                                <strong>Action:</strong> {{ step.action }}<br>
-                                                <strong>Location:</strong> {{ step.location }}<br>
-                                                <strong>Result:</strong> {{ step.result }}
-                                            </li>
-                                        {% endfor %}
-
-                                        {% if not test.steps %}
-                                            <li class="list-group-item">No steps found for this test.</li>
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                            </div>
-                        {% endfor %}
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <p id="noResultsMessage" style="display: none;">No results found. Please widen your search.</p>
+
+    <div id="tests-list" class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+
+                    {% for test in tests %}
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong class="card-title">{{ test.name }}</strong>
+                                <button class="btn btn-sm btn-danger float-end" onclick="deleteTest('{{ test.id }}')">Delete</button>
+                                <button class="btn btn-sm btn-secondary float-end me-2" onclick="editTest('{{ test.id }}')">Edit</button> 
+                            </div>
+
+                            <div class="card-body">
+                                <p class="card-text">Description: {{ test.description }}</p>
+                                <p class="card-text">Created by: {{ test.created_by_username }}</p>
+                                <p class="card-text">Created at: {{ test.created_at }}</p>
+                        
+                                <ul class="list-group">
+                                    {% for step in test.steps %}
+                                        <li class="list-group-item">
+                                            <strong>Action:</strong> {{ step.action }}<br>
+                                            <strong>Location:</strong> {{ step.location }}<br>
+                                            <strong>Result:</strong> {{ step.result }}
+                                        </li>
+                                    {% endfor %}
+
+                                    {% if not test.steps %}
+                                        <li class="list-group-item">No steps found for this test.</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
     </div>
+
 {% endblock %}
