@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+
     <div id="test-control-bar" class="container mb-3">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -28,7 +29,7 @@
     <div id="tests-list" class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card" style="border: none;">
 
                     {% for test in tests %}
                         <div class="card mb-3">
@@ -45,23 +46,39 @@
                             </div>
 
                             <div class="card-body">
-                                <p class="card-text">Description: {{ test.description }}</p>
-                                <p class="card-text">Created by: {{ test.created_by_username }}</p>
-                                <p class="card-text">Created at: {{ test.created_at }}</p>
-                        
-                                <ul class="list-group">
-                                    {% for step in test.steps %}
-                                        <li class="list-group-item">
-                                            <strong>Action:</strong> {{ step.action }}
-                                            <strong>Location:</strong> {{ step.location }}<br>
-                                            <strong>Result:</strong> {{ step.result }}
-                                        </li>
-                                    {% endfor %}
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="container">
+                                            <p class="card-text">Created by: {{ test.created_by_username }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="container">
+                                            <p class="card-text">Created at: {{ test.created_at }}</p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                    {% if not test.steps %}
-                                        <li class="list-group-item">No steps found for this test.</li>
-                                    {% endif %}
-                                </ul>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="description"></label>
+                                        <textarea class="form-control" id="description" rows="5" placeholder="Test Description">{{ test.description }}</textarea>
+                                    </div>
+                                
+                                    <ul class="list-group">
+                                        {% for step in test.steps %}
+                                            <li class="list-group-item">
+                                                <strong>Action:</strong> {{ step.action }}
+                                                <strong>Location:</strong> {{ step.location }}<br>
+                                                <strong>Result:</strong> {{ step.result }}
+                                            </li>
+                                        {% endfor %}
+
+                                        {% if not test.steps %}
+                                            <li class="list-group-item">No steps found for this test.</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
