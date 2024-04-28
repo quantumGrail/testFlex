@@ -14,7 +14,7 @@
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button class="btn btn-primary me-2" onclick="addTest()">Add Test</button>
+                                <button class="btn btn-primary me-2" onclick="addTest()">New Test</button>
                             </div>
                             <input type="text" id="searchInput" class="form-control" placeholder="Search tests" onkeyup="searchTests()">
                         </div>
@@ -68,37 +68,42 @@
                                     </div>
                                 </div>
 
-                                {% for step_index in range(test.steps|length) %}
-                                {% set step = test.steps[step_index] %}
-                                <div class="card mb-3">
-                                    <div class="card-header bg-light text-black">
-                                        <h7 class="card-title mb-0">Test Step {{ step_index + 1 }}</h7>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <label class="fw-bold">Action:</label>
-                                                <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
-                                                    <p class="scrollable-text">{{ step.action }}</p>
-                                                </div>
+                                <!-- Button to toggle test steps -->
+                                <button class="btn btn-transparent mb-3" onclick="toggleTestSteps('{{ test.id }}')">-- Toggle Test Steps --</button>
+
+                                <!-- Test steps section -->
+                                <div id="testSteps_{{ test.id }}" style="display: none;">
+                                    {% for step_index in range(test.steps|length) %}
+                                        {% set step = test.steps[step_index] %}
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-light text-black">
+                                                <h7 class="card-title mb-0">Test Step {{ step_index + 1 }}</h7>
                                             </div>
-                                            <div class="col">
-                                                <label class="fw-bold">Location:</label>
-                                                <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
-                                                    <p class="scrollable-text">{{ step.location }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label class="fw-bold">Result:</label>
-                                                <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
-                                                    <p class="scrollable-text">{{ step.result }}</p>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <label class="fw-bold">Action:</label>
+                                                        <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
+                                                            <p class="scrollable-text">{{ step.action }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="fw-bold">Location:</label>
+                                                        <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
+                                                            <p class="scrollable-text">{{ step.location }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="fw-bold">Result:</label>
+                                                        <div class="scrollable-text-container" style="max-height: 100px; overflow-y: auto;">
+                                                            <p class="scrollable-text">{{ step.result }}</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                                {% endfor %}
-                                
                             </div>
                         </div>
                     {% endfor %}
@@ -107,5 +112,16 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleTestSteps(testId) {
+            var testSteps = document.getElementById('testSteps_' + testId);
+            if (testSteps.style.display === 'none') {
+                testSteps.style.display = 'block';
+            } else {
+                testSteps.style.display = 'none';
+            }
+        }
+    </script>
 
 {% endblock %}
