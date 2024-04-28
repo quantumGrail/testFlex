@@ -59,26 +59,30 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body">
-                                    <div class="form-group mb-3">
-                                        <label for="description"></label>
-                                        <textarea class="form-control" id="description" rows="5" placeholder="Test Description">{{ test.description }}</textarea>
-                                    </div>
-                                
-                                    <ul class="list-group">
-                                        {% for step in test.steps %}
-                                            <li class="list-group-item">
-                                                <strong>Action:</strong> {{ step.action }}
-                                                <strong>Location:</strong> {{ step.location }}<br>
-                                                <strong>Result:</strong> {{ step.result }}
-                                            </li>
-                                        {% endfor %}
-
-                                        {% if not test.steps %}
-                                            <li class="list-group-item">No steps found for this test.</li>
-                                        {% endif %}
-                                    </ul>
+                                <div class="form-group">
+                                    <label for="description">Description:</label>
+                                    <textarea class="form-control" id="description" rows="5" placeholder="Test Description">{{ test.description }}</textarea>
                                 </div>
+
+                                {% for step in test.steps %}
+                                <div class="step-container">
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold">Action:</label>
+                                            <p>{{ step.action }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold">Locator:</label>
+                                            <p>{{ step.location }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold">Result:</label>
+                                            <p>{{ step.result }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
                             </div>
                         </div>
                     {% endfor %}
