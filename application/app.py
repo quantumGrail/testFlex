@@ -108,12 +108,19 @@ def logout():
 @app.route("/tests")
 def tests():
     """View and build list of tests"""
+
+    # Get the current user's ID from the session
+    user_id = session.get('user_id')
+
+    # Fetch tests created by the current user
     tests = cs50_db.execute("""
         SELECT t.*, u.username AS created_by_username
         FROM tests t
         JOIN users u ON t.user_id = u.id
-    """)
+        WHERE t.user_id = ?
+    """, user_id)
 
+    # Fetch test steps for each test
     for test in tests:
         test['steps'] = cs50_db.execute("""
             SELECT * FROM test_steps WHERE test_id = ?
