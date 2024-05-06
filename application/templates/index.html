@@ -6,12 +6,40 @@
 
 {% block content %}
 
-<div class="container mb-3" id="welcome-message">
-    Welcome, {{ user_id }}
-</div>
-<div class="container py-5">
-    <h1>Test Flex Dashboard</h1>
-    <p>This is homepage content.</p>
+<div class="container" id="dashboard-container">
+    <div id="welcome-bar" class="container mb-3">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="card bg-light">
+                    <div id="welcome-message">Welcome, {{ user_id }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="components-container">
+        <div class="row mb-3">
+            <div class="col" id="recent-changes">
+                <div class="card mb-3">
+                    <div class="card-header justify-content-between align-items-center bg-primary text-white">
+                        <h5 class="card-title align-items-center mb-0">Recent Changes</h5>
+                    </div>
+                    
+                    <div class="card-body">Change body text.</div>
+                </div>
+            </div>
+
+            <div class="col" id="test-totals">
+                <div class="card mb-3">
+                    <div class="card-header justify-content-between align-items-center bg-primary text-white">
+                        <h5 class="card-title align-items-center mb-0">Test Totals</h5>
+                    </div>
+
+                    <div class="card-body">Test body text.</div>
+                    </div>
+                </div>
+            </div>
+    </div>
 </div>
 
 {% endblock %}

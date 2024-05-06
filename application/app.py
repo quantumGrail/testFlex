@@ -32,6 +32,9 @@ def index():
     """Application Homepage"""
     user_id = session.get('user_id')
 
+    if not user_id:
+        return redirect("/login")
+
     result = cs50_db.execute("SELECT username FROM users WHERE id = ?", user_id)
 
     if result:
