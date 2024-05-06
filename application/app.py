@@ -30,8 +30,16 @@ def initialize_selenium():
 @app.route("/")
 def index():
     """Application Homepage"""
+    user_id = session.get('user_id')
 
-    return render_template("index.html")
+    result = cs50_db.execute("SELECT username FROM users WHERE id = ?", user_id)
+
+    if result:
+        username = result[0]['username'].title()
+    else:
+        username = "Guest"
+
+    return render_template("index.html", user_id=username)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
