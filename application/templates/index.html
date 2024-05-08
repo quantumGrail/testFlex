@@ -25,7 +25,14 @@
                         <h5 class="card-title align-items-center mb-0">Recent Changes</h5>
                     </div>
                     
-                    <div class="card-body">Change body text.</div>
+                    <div class="card-body">
+
+                        {% for trans in transactions %}
+
+                            <p>You {{ trans['trans_type_label'] }} {{ trans.name }}</p>
+
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 

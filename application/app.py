@@ -42,7 +42,9 @@ def index():
     else:
         username = "Guest"
 
-    return render_template("index.html", user_id=username)
+    transactions = cs50_db.execute("SELECT *, CASE WHEN trans_type = 0 THEN 'added' ELSE trans_type END AS trans_type_label FROM tests_transactions WHERE user = ?", user_id)
+
+    return render_template("index.html", user_id=username, transactions=transactions)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -156,6 +158,12 @@ def add_test():
 
         cs50_db.execute("INSERT INTO tests (name, description, user_id) VALUES (?, ?, ?)",
                name, description, user_id)
+        
+        # Mark transaction as 0 to represent an add
+        trans_type = 0
+
+        cs50_db.execute("INSERT INTO tests_transactions (user, trans_type, name) VALUES (?, ?, ?)",
+                user_id, trans_type, name)
     
         return redirect("/tests")
     
