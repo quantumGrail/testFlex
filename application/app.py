@@ -66,7 +66,7 @@ def login():
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash"], request.form.get("password")
         ):
-            return("invalid username or password", 403)
+            return render_template("invalid.html")
         
         session["user_id"] = rows[0]["id"]
 
