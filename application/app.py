@@ -54,10 +54,10 @@ def login():
     
     if request.method == "POST":
         if not request.form.get("username"):
-            return("must provide username", 403)
+            return render_template("empty_credentials.html")
         
         elif not request.form.get("password"):
-            return("must provide password", 403)
+            return render_template("empty_credentials.html")
         
         rows = cs50_db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
@@ -84,21 +84,21 @@ def register():
 
         username = request.form.get("username")
         if not username:
-            return("Username cannot be blank.")
+            return render_template("empty_credentials.html")
 
         password = request.form.get("password")
         if not password:
-            return("Password cannot be blank.")
+            return render_template("empty_credentials.html")
 
         confirmation = request.form.get("confirmation")
         if not confirmation:
-            return("Please confirm password.")
+            return render_template("bad_password.html")
         elif confirmation != password:
-            return("Passwords do not match.")
+            return render_template("bad_password.html")
 
         existing_user = cs50_db.execute("SELECT * FROM users WHERE username = ?", username)
         if existing_user:
-            return("Username already exists.")
+            return render_template("reused_username.html")
 
         hashed_password = generate_password_hash(password)
 
