@@ -133,6 +133,9 @@ def tests():
         WHERE t.user_id = ?
     """, user_id)
 
+    if not tests:
+        return render_template("no_tests.html")
+
     # Fetch test steps for each test
     for test in tests:
         test['steps'] = cs50_db.execute("""
