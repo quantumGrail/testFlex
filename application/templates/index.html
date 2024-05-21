@@ -29,7 +29,7 @@
 
                         {% for trans in transactions %}
 
-                            <p>You {{ trans['trans_type_label'] }} {{ trans.name }}.</p>
+                            <p>You {{ trans['trans_type_label'] }} '{{ trans.name }}'.</p>
 
                         {% endfor %}
                     </div>
@@ -39,10 +39,10 @@
             <div class="col" id="test-totals">
                 <div class="card mb-3">
                     <div class="card-header justify-content-between align-items-center bg-primary text-white">
-                        <h5 class="card-title align-items-center mb-0">Test Totals</h5>
+                        <h5 class="card-title align-items-center mb-0">Lifetime Use</h5>
                     </div>
 
-                    <div class="card-body">Test body text.</div>
+                    <div class="card-body">Active Tests: {{ count_str }}</div>
                     </div>
                 </div>
             </div>
