@@ -45,12 +45,14 @@ def index():
     transactions = cs50_db.execute("SELECT *, CASE WHEN trans_type = 0 THEN 'added' ELSE trans_type END AS trans_type_label FROM tests_transactions WHERE user = ?", user_id)
 
     num_tests = cs50_db.execute("SELECT COUNT(user_id) FROM tests WHERE user_id = ?", user_id)
-
     count = num_tests[0]['COUNT(user_id)']
-
     count_str = str(count)
 
-    return render_template("index.html", user_id=username, transactions=transactions, count_str=count_str)
+    steps = cs50_db.execute("SELECT COUNT(*) AS step_count FROM test_steps WHERE test_id IN (SELECT id FROM tests WHERE user_id = ?)", user_id)
+    step_count = steps[0]['step_count']
+    step_str = str(step_count)
+
+    return render_template("index.html", user_id=username, transactions=transactions, count_str=count_str, step_str=step_str)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
