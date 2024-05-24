@@ -1,5 +1,6 @@
 # Import Management
 from cs50 import SQL
+from datetime import datetime, timedelta
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from selenium import webdriver
@@ -52,7 +53,37 @@ def index():
     step_count = steps[0]['step_count']
     step_str = str(step_count)
 
-    return render_template("index.html", user_id=username, transactions=transactions, count_str=count_str, step_str=step_str)
+    # Get current date
+    now = datetime.now()
+
+    # Define date ranges for the past 3 months, current month, and next 3 months 
+    # Credit: ChatGPT used for dynamic date formula
+    date_ranges = [(now - timedelta(days=30 * i)).strftime('%Y-%m-01') for i in range(-3, 4)]
+
+    # Initialize a dictionary to store the counts
+    test_counts = {}
+
+    for date in date_ranges:
+        start_date = date
+        # Credit: ChatGPT used for time formulas on end dates
+        end_date = (datetime.strptime(date, '%Y-%m-01') + timedelta(days=31)).strftime('%Y-%m-01')
+        count = cs50_db.execute("SELECT COUNT(*) AS count FROM tests WHERE user_id = ? AND created_at >= ? AND created_at < ?", user_id, start_date, end_date)
+        month = datetime.strptime(date, '%Y-%m-01').strftime('%B')
+        test_counts[month] = count[0]['count']
+
+    # Convert test_counts values to a list of counts
+    test_data = list(test_counts.values())
+    test_labels = list(test_counts.keys())
+
+    return render_template(
+        "index.html",
+        user_id=username,
+        transactions=transactions,
+        count_str=count_str,
+        step_str=step_str,
+        test_labels=test_labels,
+        test_data=test_data
+    )
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
