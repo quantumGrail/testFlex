@@ -5,48 +5,98 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container" id="dashboard-container">
-    <div id="welcome-bar" class="container mb-3">
-        <div class="row justify-content-center">
-            <div class="col">
-                <div class="card bg-light">
-                    <div id="welcome-message">Welcome, {{ user_id }}</div>
+<div class="container">
+    <div class="row my-3">
+        <div class="col-12 text-center">
+            <h1>Welcome, {{ user_id }}</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Active Tests</div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a class="text-white" style="text-decoration: none;" href="/tests">{{ count_str }}</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Total Pending</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_pending }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Case Closed</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ case_closed }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Task Completed</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ task_completed }}</h5>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container" id="components-container">
-        <div class="row mb-3">
-            <div class="col" id="recent-changes">
-                <div class="card mb-3">
-                    <div class="card-header justify-content-between align-items-center bg-primary text-white">
-                        <h5 class="card-title align-items-center mb-0">Recent Changes</h5>
-                    </div>
-                    
-                    <div class="card-body">
-
-                        {% for trans in transactions %}
-
-                            <p>You {{ trans['trans_type_label'] }} '{{ trans.name }}'.</p>
-
-                        {% endfor %}
-                    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">Recent Changes</div>
+                <div class="card-body">
+                    {% for trans in transactions %}
+                        <p>You {{ trans['trans_type_label'] }} '{{ trans.name }}'.</p>
+                    {% endfor %}
                 </div>
             </div>
-
-            <div class="col" id="test-totals">
-                <div class="card mb-3">
-                    <div class="card-header justify-content-between align-items-center bg-primary text-white">
-                        <h5 class="card-title align-items-center mb-0">Lifetime Use</h5>
-                    </div>
-
-                    <div class="card-body">Active Tests: <a href="/tests">{{ count_str }}</a></div>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">Analytics</div>
+                <div class="card-body">
+                    <canvas id="myChart"></canvas>
                 </div>
             </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3, 7],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 
 {% endblock %}
