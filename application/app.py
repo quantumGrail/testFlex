@@ -1,4 +1,3 @@
-# Import Management
 from cs50 import SQL
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, redirect, render_template, request, session
@@ -7,18 +6,14 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# Configure Application
 app = Flask(__name__, static_folder='templates/static')
 
-# Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# CS50 SQL object for raw execution
 cs50_db = SQL("sqlite:///test-flex.db")
 
-# Initialize Selenium for Chrome
 def initialize_selenium():
     try:
         driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -27,7 +22,6 @@ def initialize_selenium():
         print("Error initializing webdriver:", e)
         return None
 
-# Define application routes
 @app.route("/")
 def index():
     """Application Homepage"""
@@ -43,7 +37,17 @@ def index():
     else:
         username = "Guest"
 
-    transactions = cs50_db.execute("SELECT *, CASE WHEN trans_type = 0 THEN 'added' ELSE trans_type END AS trans_type_label FROM tests_transactions WHERE user = ?", user_id)
+    # Credit: ChatGPT used to understand CASE operator
+    transactions = cs50_db.execute("""
+        SELECT *,
+            CASE 
+               WHEN trans_type = 0 THEN 'added'
+               WHEN trans_type = 1 THEN 'deleted'
+               ELSE trans_type
+            END AS trans_type_label
+        FROM tests_transactions
+        WHERE user = ?
+    """, user_id)
 
     num_tests = cs50_db.execute("SELECT COUNT(user_id) FROM tests WHERE user_id = ?", user_id)
     count = num_tests[0]['COUNT(user_id)']
@@ -53,14 +57,24 @@ def index():
     step_count = steps[0]['step_count']
     step_str = str(step_count)
 
-    # Get current date
+    deleted_search = cs50_db.execute("SELECT num_deleted AS the_deleted FROM deletes")
+
+    users = cs50_db.execute("SELECT COUNT(id) AS num_users FROM users")
+    user_count = users[0]['num_users']
+    user_str = str(user_count)
+
+    if deleted_search:
+        retired_tests = deleted_search[0]['the_deleted']
+    else:
+        retired_tests = 0
+
+    retire_str = str(retired_tests)
+
     now = datetime.now()
 
-    # Define date ranges for the past 3 months, current month, and next 3 months 
     # Credit: ChatGPT used for dynamic date formula
     date_ranges = [(now - timedelta(days=30 * i)).strftime('%Y-%m-01') for i in range(-3, 4)]
 
-    # Initialize a dictionary to store the counts
     test_counts = {}
 
     for date in date_ranges:
@@ -71,7 +85,6 @@ def index():
         month = datetime.strptime(date, '%Y-%m-01').strftime('%B')
         test_counts[month] = count[0]['count']
 
-    # Convert test_counts values to a list of counts
     test_data = list(test_counts.values())
     test_labels = list(test_counts.keys())
 
@@ -82,7 +95,9 @@ def index():
         count_str=count_str,
         step_str=step_str,
         test_labels=test_labels,
-        test_data=test_data
+        test_data=test_data,
+        retire_str=retire_str,
+        user_str=user_str
     )
 
 @app.route("/login", methods=["GET", "POST"])
@@ -151,20 +166,16 @@ def register():
 def logout():
     """Log user out"""
 
-    # Forget any user_id
     session.clear()
 
-    # Redirect user to login form
     return redirect("/")
 
 @app.route("/tests")
 def tests():
     """View and build list of tests"""
 
-    # Get the current user's ID from the session
     user_id = session.get('user_id')
 
-    # Fetch tests created by the current user
     tests = cs50_db.execute("""
         SELECT t.*, u.username AS created_by_username
         FROM tests t
@@ -175,7 +186,6 @@ def tests():
     if not tests:
         return render_template("no_tests.html")
 
-    # Fetch test steps for each test
     for test in tests:
         test['steps'] = cs50_db.execute("""
             SELECT * FROM test_steps WHERE test_id = ?
@@ -191,7 +201,6 @@ def add_test():
         description = request.form.get("description")
         user_id = session.get('user_id')
 
-        # Server-side Validations
         if not name:
             return jsonify({'error': 'Test name is required'}), 400
     
@@ -243,9 +252,30 @@ def edit_test(test_id):
 @app.route("/delete_test/<int:test_id>", methods=["POST"])
 def delete_test(test_id):
     """Delete Test"""
-    cs50_db.execute(
-        "DELETE FROM tests WHERE id = ?", test_id
-    )
+
+    name = request.form.get("name")
+    user_id = session.get('user_id')
+
+    cs50_db.execute("DELETE FROM tests WHERE id = ?", test_id)
+
+    result = cs50_db.execute("SELECT num_deleted FROM deletes")
+
+    if result:
+        delete_count = result[0]['num_deleted']
+
+        delete_count += 1
+        
+        cs50_db.execute("UPDATE deletes SET num_deleted = ?", delete_count)
+    else:
+        
+        cs50_db.execute("INSERT INTO deletes (num_deleted) VALUES (1)")
+
+     # Mark transaction as 1 to represent a delete
+    trans_type = 1
+
+    cs50_db.execute("INSERT INTO tests_transactions (user, trans_type, name) VALUES (?, ?, ?)",
+            user_id, trans_type, name)
+
     return redirect("/tests")
 
 @app.route("/automation", methods=["GET", "POST"])
